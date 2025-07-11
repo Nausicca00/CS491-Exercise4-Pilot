@@ -1,7 +1,6 @@
 const username = 'user' + ':' + Math.random();
 const browser_name = getBrowserName();
 const ping_button = document.getElementById('pingButton');
-ping_button.disabled = true;
 
 let polling = null;
 
