@@ -1,5 +1,6 @@
 const username = 'user' + ':' + Math.random();
 const browser_name = getBrowserName();
+const ping_button = document.getElementById('pingButton');
 let polling = null;
 
 /**
@@ -70,7 +71,6 @@ async function compareTokens() {
     if (server_token.username !== token.username ||
             server_token.browser !== token.browser
        ) {
-            const ping_button = document.getElementById('pingButton');
             ping_button.disabled = false;
             clearInterval(polling);
             console.log('Opponent responded. Your turn!');
@@ -81,7 +81,6 @@ async function compareTokens() {
 }
 
 window.onload = () => {
-  const ping_button = document.getElementById('pingButton');
   ping_button.addEventListener('click', ping);
   ping_button.disabled = false;
   console.log('Client ready:', token);
