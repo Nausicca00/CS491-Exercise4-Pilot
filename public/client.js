@@ -83,7 +83,7 @@ async function compareTokens() {
 async function init() {
   try {
     const server_token = await getToken();
-    if (Object.keys(server_token).length === 0) {
+    if (!server_token || Object.keys(server_token).length === 0) {
       await putToken(token);
       ping_button.disabled = false;
       alert('Your internet is faster, you ping first!');
