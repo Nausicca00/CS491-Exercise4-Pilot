@@ -1,6 +1,7 @@
 const username = 'user' + ':' + Math.random();
 const browser_name = getBrowserName();
 const ping_button = document.getElementById('pingButton');
+ping_button.disabled = true;
 let polling = null;
 
 /**
@@ -79,8 +80,23 @@ async function compareTokens() {
   }
 }
 
+async function init() {
+  try {
+    const server_token = await getToken();
+    if (Object.keys(server_token).length === 0) {
+      await putToken(token);
+      ping_button.disabled = false;
+      alert('Your internet is faster, you ping first!');
+    } else {
+      polling = setInterval(compareTokens, 1000);
+    }
+  } catch (error) {
+    console.error('Error during initialization:', error);
+  }
+}
+
 window.onload = () => {
   ping_button.addEventListener('click', ping);
-  ping_button.disabled = false;
   console.log('Client ready:', token);
+  init();
 }
