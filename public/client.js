@@ -1,7 +1,5 @@
 const username = 'user' + ':' + Math.random();
 const browser_name = getBrowserName();
-const ping_button = document.getElementById('pingButton');
-ping_button.disabled = true;
 let polling = null;
 
 /**
@@ -96,7 +94,9 @@ async function init() {
 }
 
 window.onload = () => {
+  const ping_button = document.getElementById('pingButton');
   ping_button.addEventListener('click', ping);
+  ping_button.disabled = true;
   console.log('Client ready:', token);
   init();
 }
