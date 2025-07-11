@@ -1,5 +1,6 @@
 const username = 'user' + ':' + Math.random();
 const browser_name = getBrowserName();
+const ping_button = document.getElementById('pingButton');
 let polling = null;
 
 /**
@@ -16,7 +17,7 @@ async function getToken() {
   try {
     const response = await fetch('/token');
     if (!response.ok) throw new Error('Could not get Token');
-    let server_token = await response.json();
+    const server_token = await response.json();
     return server_token;
   } catch (error) {
       console.error('Error getting Token:', error);
@@ -50,14 +51,36 @@ function getBrowserName() {
     return 'Unknown Browser';
 }
 
+async function ping(){
+  ping_button.disabled = true;
+
+  try{
+    await putToken(token);
+    console.log('Ping sent. Waiting for opponent...');
+  } catch (error){
+    console.error('Error during ping:', error);
+  }
+
+  polling = setInterval(compareTokens, 1000);
+}
+
 async function compareTokens() {
   try {
-    let server_token = await getToken();
-    if (server_token !== token) {
-      ping_button.disabled = false;
-      clearInterval(polling);
+    const server_token = await getToken();
+    if (server_token.username !== token.username ||
+            server_token.browser !== token.browser
+       ) {
+            ping_button.disabled = false;
+            clearInterval(polling);
+            console.log('Opponent responded. Your turn!');
     }
   } catch (error) {
       console.error('Error retrieving Token:', error);
   }
+}
+
+window.onload = () => {
+  ping_button.addEventListener('click', ping);
+  ping_button.disabled = false;
+  console.log('Client ready:', token);
 }
