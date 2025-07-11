@@ -52,7 +52,6 @@ function getBrowserName() {
 }
 
 async function ping(){
-  const ping_button = document.getElementById('pingButton');
   ping_button.disabled = true;
 
   try{
