@@ -14,6 +14,16 @@ const token = {
   browser: browser_name,
 }
 
+/**
+ * @typedef {Object} Token
+ * @property {string} username - The init phrase.
+ * @property {string} browser - The init phrase
+ */
+const init_token = {
+  username: 'init',
+  browser: 'init',
+}
+
 async function getToken() {
   try {
     const response = await fetch('/token');
@@ -69,12 +79,15 @@ async function ping(){
 async function compareTokens() {
   try {
     const server_token = await getToken();
-    if (server_token.username !== token.username ||
-            server_token.browser !== token.browser
-       ) {
-            ping_button.disabled = false;
-            clearInterval(polling);
-            console.log('Opponent responded. Your turn!');
+    if (server_token.username !== token.username ||server_token.browser !== token.browser) {
+
+      if (server_token.username === init_token.username || server_token.browser === init_token.browser) {
+        return;
+      }
+
+      ping_button.disabled = false;
+      clearInterval(polling);
+      console.log('Opponent responded. Your turn!');
     }
   } catch (error) {
       console.error('Error retrieving Token:', error);
@@ -85,7 +98,7 @@ async function init() {
   try {
     const server_token = await getToken();
     if (!server_token || Object.keys(server_token).length === 0) {
-      await putToken(token);
+      await putToken(init_token);
       ping_button.disabled = false;
       alert('Your internet is faster, you ping first!');
     } else {
