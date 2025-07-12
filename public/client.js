@@ -33,13 +33,14 @@ async function putToken(token) {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(token)
+      body: JSON.stringify(token),
+      keepalive: true,
     });
     if (!response.ok) throw new Error('Could not update Token');
-    return await response.text();
+      return await response.text();
   } catch (error) {
-    console.error('Error updating Token:', error);
-    throw error;
+      console.error('Error updating Token:', error);
+      throw error;
   }
 }
   
@@ -100,3 +101,7 @@ window.onload = () => {
   console.log('Client ready:', token);
   init();
 }
+
+window.addEventListener('beforeunload', () => {
+  putToken({});
+});
